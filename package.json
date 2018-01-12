@@ -1,0 +1,16 @@
+{
+  "name": "at-mention-notify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "listen.js",
+  "scripts": {
+    "start": "node listen.js"
+  },
+  "author": "Evan Noronha",
+  "license": "ISC",
+  "dependencies": {
+    "node-jsdom": "latest",
+    "request": "^2.83.0",
+    "socket.io-client": "^2.0.4"
+  }
+}
