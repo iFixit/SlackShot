@@ -1,4 +1,6 @@
 var io = require('socket.io-client');
+var request = require('request');
+var jsdom = require('node-jsdom');
 
 var socket = io("wss://realtime.dozuki.com");
 
@@ -15,17 +17,11 @@ socket.on('notification', function(notification) {
    console.log("Recieved notification:\n" + (notification["html"]));
    console.log("Whole notification: \n " + JSON.stringify(notification));
    
-   var jsdom = require('node-jsdom');
-
    jsdom.env(notification["html"], ["http://code.jquery.com/jquery.js"], function (errors, window) {
       msg = window.$("div.notification-message").text().trim();
       lnk = window.$("a").attr("href");
 
-      var request = require('request');
-
-      var headers = {
-         'Content-type': 'application/json'
-      };
+      var headers = { 'Content-type': 'application/json' };
 
       if (lnk) {
          lnk = "http://www.ifixit.com" + lnk;
