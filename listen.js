@@ -17,37 +17,36 @@ socket.on('notification', function(notification) {
    
    var jsdom = require('node-jsdom');
 
-   jsdom.env(notification["html"], 
-      ["http://code.jquery.com/jquery.js"],
-      function (errors, window){
-         msg = window.$("div.notification-message").text().trim();
-         lnk = window.$("a").attr("href");
+   jsdom.env(notification["html"], ["http://code.jquery.com/jquery.js"], function (errors, window) {
+      msg = window.$("div.notification-message").text().trim();
+      lnk = window.$("a").attr("href");
 
-         var request = require('request');
+      var request = require('request');
 
-         var headers = {
-            'Content-type': 'application/json'
-         };
+      var headers = {
+         'Content-type': 'application/json'
+      };
 
-         if (lnk) {
-            var formattedString = "<" + lnk + "|" + msg + ">";
-         } else {
-            var formattedString = msg;
+      if (lnk) {
+         lnk = "http://www.ifixit.com" + lnk;
+         var formattedString = "<" + lnk + "|" + msg + ">";
+      } else {
+         var formattedString = msg;
+      }
+      var dataString = '{"text":"' + formattedString + ' "}';
+
+      var options = {
+         url: 'https://hooks.slack.com/services/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',
+         method: 'POST',
+         headers: headers,
+         body: dataString
+      };
+
+      function callback(error, response, body) {
+         if (!error && response.statusCode == 200) {
+            console.log(body);
          }
-         var dataString = '{"text":"' + formattedString + ' "}';
-
-         var options = {
-            url: 'https://hooks.slack.com/services/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',
-            method: 'POST',
-            headers: headers,
-            body: dataString
-         };
-
-         function callback(error, response, body) {
-            if (!error && response.statusCode == 200) {
-               console.log(body);
-            }
-         }
-         request(options, callback);
-      });
+      }
+      request(options, callback);
+   });
 });
