@@ -13,6 +13,8 @@ socket.on('connect', function() {
 socket.on('notification', function(notification) {
    if (notification['event'] != 'notification') return;
    console.log("Recieved notification:\n" + (notification["html"]));
+   console.log("Whole notification: \n " + JSON.stringify(notification));
+   
    var jsdom = require('node-jsdom');
 
    jsdom.env(notification["html"], 
