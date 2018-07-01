@@ -1,6 +1,6 @@
-var io = require('socket.io-client');
-var request = require('request');
-var jsdom = require('node-jsdom');
+import io from 'socket.io-client';
+import request from 'request';
+import jsdom from 'node-jsdom';
 
 var socket = io("wss://realtime.dozuki.com");
 
