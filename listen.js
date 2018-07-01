@@ -7,7 +7,7 @@ var socket = io("wss://realtime.dozuki.com");
 socket.on('connect', function() {
    console.log("Connected");
    iFixitSocketioRoom = 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a';
-   iFixitMetaSocketioRoom = 'ifixit_meta 1101176 a9901d65c53a579ca0dca6d6af21a418a139405';
+   iFixitMetaSocketioRoom = 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405';
    socket.emit('subscribe', { room: iFixitSocketioRoom });
    socket.emit('subscribe', { room: iFixitMetaSocketioRoom });
 });
