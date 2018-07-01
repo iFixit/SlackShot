@@ -4,12 +4,15 @@ var jsdom = require('node-jsdom');
 
 var socket = io("wss://realtime.dozuki.com");
 
+const ifixitSocket = io('wss://realtime.dozuki.com');
+const metaSocket = io('wss://realtime.dozuki.com');
+
+const iFixitSocketioRoom = 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a';
+const MetaSocketioRoom = 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405';
+
 socket.on('connect', function() {
-   console.log("Connected");
-   iFixitSocketioRoom = 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a';
-   iFixitMetaSocketioRoom = 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405';
    socket.emit('subscribe', { room: iFixitSocketioRoom });
-   socket.emit('subscribe', { room: iFixitMetaSocketioRoom });
+   socket.emit('subscribe', { room: MetaSocketioRoom });
 });
 
 socket.on('notification', function(notification) {
@@ -18,8 +21,8 @@ socket.on('notification', function(notification) {
    console.log("Whole notification: \n " + JSON.stringify(notification));
    
    jsdom.env(notification["html"], ["http://code.jquery.com/jquery.js"], function (errors, window) {
-      msg = window.$("div.notification-message").text().trim();
-      lnk = window.$("a").attr("href");
+      const msg = window.$("div.notification-message").text().trim();
+      let lnk = window.$("a").attr("href");
 
       var headers = { 'Content-type': 'application/json' };
 
