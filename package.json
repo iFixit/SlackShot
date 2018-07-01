@@ -2,21 +2,14 @@
   "name": "at-mention-notify",
   "version": "1.0.0",
   "description": "",
-  "main": "listen.js",
   "scripts": {
-    "start": "node listen.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Evan Noronha",
   "license": "ISC",
   "dependencies": {
-    "babel-cli": "^6.26.0",
     "node-jsdom": "latest",
     "request": "^2.87.0",
     "socket.io-client": "^2.0.4"
-  },
-  "devDependencies": {
-    "babel-preset-env": "^1.7.0",
-    "webpack": "^4.14.0",
-    "webpack-cli": "^3.0.8"
   }
 }
