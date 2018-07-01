@@ -9,10 +9,17 @@
    "author": "Evan Noronha",
    "license": "ISC",
    "dependencies": {
+      "eslint-config-airbnb": "^17.0.0",
+      "eslint-plugin-jsx": "0.0.2",
+      "eslint-plugin-react": "^7.10.0",
       "jsdom": "^11.11.0",
       "request": "^2.87.0",
       "socket.io-client": "^2.1.1"
    },
-   "devDependencies": {},
+   "devDependencies": {
+      "eslint": "^4.19.1",
+      "eslint-config-airbnb-base": "^13.0.0",
+      "eslint-plugin-import": "^2.13.0"
+   },
    "description": ""
 }
