@@ -9,8 +9,12 @@
   "author": "Evan Noronha",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "^6.26.0",
     "node-jsdom": "latest",
     "request": "^2.83.0",
     "socket.io-client": "^2.0.4"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
   }
 }
