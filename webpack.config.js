@@ -4,5 +4,8 @@ module.exports = {
       filename: "./bundle.js"
    },
    target : 'node',
+   optimization: {
+      minimize: false
+   },
 }
 
