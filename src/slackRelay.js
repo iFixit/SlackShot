@@ -11,7 +11,7 @@ export default function forwardToSlack(slackHook, baseUrl) {
       let formattedString;
 
       if (url) {
-         const completeUrl = `${baseUrl}/${url}`;
+         const completeUrl = `${baseUrl}${url}`;
          formattedString = `<${completeUrl}|${text}>`;
       } else {
          formattedString = text;
