@@ -16,7 +16,11 @@ To run:
 node dist/bundle.js
 ```
 
-I recommend running bundle.js as a daemon using a tool like forever or pm2.
+However, I recommend running bundle.js as a daemon using a tool like forever or pm2:
+
+```
+forever start dist/bundle.js
+```
 
 Usage
 ---
