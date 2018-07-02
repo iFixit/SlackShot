@@ -1,8 +1,6 @@
-import { io } from 'socket.io-client';
-import { request } from 'request';
-import { jsdom } from 'jsdom';
-
-const socket = io('wss://realtime.dozuki.com');
+import request from 'request';
+import io from 'socket.io-client';
+import cheerio from 'cheerio';
 
 // const ifixitSocket = io('wss://realtime.dozuki.com');
 // const metaSocket = io('wss://realtime.dozuki.com');
@@ -10,11 +8,37 @@ const socket = io('wss://realtime.dozuki.com');
 const iFixitSocketioRoom = 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a';
 const MetaSocketioRoom = 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405';
 
-const onResponse = (error, response, body) => {
-   if (!error && response.statusCode === 200) {
-      console.log(body);
+const onError = (err, res, body) => {
+   if (res !== 200) {
+      console.log('REQUEST RESULTS:', err, body);
    }
 };
+
+const forwardToSlack = (url, text) => {
+   let formattedString;
+
+   if (url) {
+      const completeUrl = `http://www.ifixit.com${url}`;
+      formattedString = `<${completeUrl}|${text}>`;
+   } else {
+      formattedString = text;
+   }
+
+
+   const uri = 'https://hooks.slack.com/services/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';
+   const headers = { 'Content-type': 'application/json' };
+   const body = `{"text":"  ${formattedString} "}`;
+
+   const options = {
+      uri,
+      headers,
+      body,
+   };
+
+   request.post(options, onError);
+};
+
+const socket = io('wss://realtime.dozuki.com');
 
 socket.on('connect', () => {
    socket.emit('subscribe', { room: iFixitSocketioRoom });
@@ -23,37 +47,11 @@ socket.on('connect', () => {
 
 socket.on('notification', (notification) => {
    if (notification.event !== 'notification') return;
-   console.log(`Recieved notification:\n + ${notification.html}`);
-   console.log(`Whole notification: \n + ${JSON.stringify(notification)}`);
 
-   jsdom.env(notification.html, ['http://code.jquery.com/jquery.js'], (errors, window) => {
-      const msg = window.$('div.notification-message').text().trim();
-      let lnk = window.$('a').attr('href');
+   const notificationHtml = cheerio.load(notification.html);
 
-      const headers = {
-         'Content-type': 'application/json',
-      };
+   const text = notificationHtml('.notification-message').text().trim();
+   const link = notificationHtml('a').attr('href');
 
-      let formattedString;
-
-      if (lnk) {
-         lnk = `http://www.ifixit.com${lnk}`;
-         formattedString = `<${lnk}|${msg}>`;
-      } else {
-         formattedString = msg;
-      }
-
-      const dataString = `{
-         "text": "${formattedString}"}
-      `;
-
-      const options = {
-         url: 'https://hooks.slack.com/services/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',
-         method: 'POST',
-         headers,
-         body: dataString,
-      };
-
-      request(options, onResponse);
-   });
+   forwardToSlack(link, text);
 });
