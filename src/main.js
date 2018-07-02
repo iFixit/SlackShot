@@ -4,7 +4,7 @@ import _ from 'lodash';
 import slackRelay from './slackRelay';
 import destructureNotification from './destructure-notification';
 
-import conf from './config';
+import conf from '../config';
 
 _.forEach(conf, (value) => {
    const socket = io('wss://realtime.dozuki.com');
