@@ -1,5 +1,5 @@
 module.exports = {
-   entry: './src/listen.js',
+   entry: './src/main.js',
    output: { filename: './bundle.js' },
    target: 'node',
    optimization: { minimize: false },
