@@ -1,34 +1,36 @@
 import io from 'socket.io-client';
-import cheerio from 'cheerio';
+import _ from 'lodash';
 
 import slackRelay from './slackRelay';
-// const ifixitSocket = io('wss://realtime.dozuki.com');
-// const metaSocket = io('wss://realtime.dozuki.com');
+import destructureNotification from './destructure-notification';
 
-const iFixitSocketioRoom = 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a';
-const MetaSocketioRoom = 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405';
+const conf = [
+   {
+      socketioRoom: 'ifixit 1101176 99ede35e3baded0cc07c65e78f3b8c2160f9ed0a',
+      webhookUrl: 'https://hooks.slack.com/services/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',
+   },
+   {
+      socketioRoom: 'ifixit_meta 1101176 a99201d65c53a579ca0dca6d6af21a418a139405',
+      webhookUrl: 'https://hooks.slack.com/services/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',
+   },
+   {
+      socketioRoom: 'ifixit 1883877 d7ab6ec9be763dd3b4d932328430130f3748125a',
+      webhookUrl: 'https://hooks.slack.com/services/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',
+   },
+];
 
-const forwardToSlack = slackRelay('https://hooks.slack.com/services/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');
+_.forEach(conf, (value) => {
+   const socket = io('wss://realtime.dozuki.com');
+   const forwardToSlack = slackRelay(value.webhookUrl);
 
-const destructureNotification = (html) => {
-   const notificationHtml = cheerio.load(html);
+   socket.on('connect', () => {
+      socket.emit('subscribe', { room: value.socketioRoom });
+   });
 
-   const text = notificationHtml('.notification-message').text().trim();
-   const link = notificationHtml('a').attr('href');
-
-   return { text, link };
-};
-
-const socket = io('wss://realtime.dozuki.com');
-
-socket.on('connect', () => {
-   socket.emit('subscribe', { room: iFixitSocketioRoom });
-   socket.emit('subscribe', { room: MetaSocketioRoom });
-});
-
-socket.on('notification', (notification) => {
-   if (notification.event === 'notification') {
-      const { text, link } = destructureNotification(notification.html);
-      forwardToSlack(link, text);
-   }
+   socket.on('notification', (notification) => {
+      if (notification.event === 'notification') {
+         const { text, link } = destructureNotification(notification.html);
+         forwardToSlack(link, text);
+      }
+   });
 });
