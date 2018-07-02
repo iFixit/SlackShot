@@ -6,12 +6,12 @@ const onError = (err, res, body) => {
    }
 };
 
-export default function forwardToSlack(slackHook) {
+export default function forwardToSlack(slackHook, baseUrl) {
    return (url, text) => {
       let formattedString;
 
       if (url) {
-         const completeUrl = `http://www.ifixit.com${url}`;
+         const completeUrl = `${baseUrl}/${url}`;
          formattedString = `<${completeUrl}|${text}>`;
       } else {
          formattedString = text;
