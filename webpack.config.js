@@ -4,7 +4,6 @@ module.exports = {
    target: 'node',
    optimization: { minimize: false },
    mode: 'development',
-   watch: true,
    module: {
       rules: [
          {
