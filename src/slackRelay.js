@@ -10,11 +10,13 @@ export default function forwardToSlack(slackHook, baseUrl) {
    return (url, text) => {
       let formattedString;
 
+      const sanitized = text.replace(/"/g, "'");
+
       if (url) {
          const completeUrl = `${baseUrl}${url}`;
-         formattedString = `<${completeUrl}|${text}>`;
+         formattedString = `<${completeUrl}|${sanitized}>`;
       } else {
-         formattedString = text;
+         formattedString = sanitized;
       }
 
       const uri = slackHook;
